@@ -1,4 +1,3 @@
-import numpy as np
 import glob
 from sklearn.feature_extraction.text import CountVectorizer
 
