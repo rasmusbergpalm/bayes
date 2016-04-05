@@ -12,12 +12,12 @@ val_s = np.argmax(val_S.toarray(), axis=1)
 
 nb = CombinedMultinomialBayesianNaiveBayes(0, 0.1, 0.01)
 nb.fit(train_X, train_R, train_S)
-pred_r, pred_s = nb.predict(val_X)
+pred_s = nb.predict_sender(val_X, val_r)
 
-print "Receiver:"
-print f1_score(val_r, pred_r, average='micro')
-print f1_score(val_r, pred_r, average='macro')
-print f1_score(val_r, pred_r, average='weighted')
+#print "Receiver:"
+#print f1_score(val_r, pred_r, average='micro')
+#print f1_score(val_r, pred_r, average='macro')
+#print f1_score(val_r, pred_r, average='weighted')
 
 print "Sender:"
 print f1_score(val_s, pred_s, average='micro')
