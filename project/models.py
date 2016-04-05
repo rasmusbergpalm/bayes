@@ -46,27 +46,34 @@ class CombinedMultinomialBayesianNaiveBayes:
 
     def predict_log_proba(self, x):
         """
-        x: sparse n-samples x n-features
+        x: sparse 1 x n-features
+        :returns n-receivers x n-senders matrix of log probabilities
         """
-        n_docs = x.shape[0]
-        lp = np.zeros((n_docs, self.n_receivers, self.n_senders))
-        for doc in range(n_docs):
-            _, j, xj = find(x[doc, :])
-            for r in range(self.n_receivers):
-                wj = self.W[r][:, j].toarray() + self.beta
-                a = betaln(wj + xj, axis=1)
-                b = betaln(wj, axis=1)
-                lp[doc, r, :] = self.lrp[r] + self.lrsp[r] + a - b
+        lp = np.zeros((self.n_receivers, self.n_senders))
+        _, j, xj = find(x)
+        for r in range(self.n_receivers):
+            wj = self.W[r][:, j].toarray() + self.beta
+            a = betaln(wj + xj, axis=1)
+            b = betaln(wj, axis=1)
+            lp[r, :] = self.lrp[r] + self.lrsp[r] + a - b
 
         return lp
 
     def predict(self, x):
         """
         x: sparse n-samples x n-features
+        :returns two lists, of receivers and senders respectively
         """
-        lp = self.predict_log_proba(x)
+        receivers = list()
+        senders = list()
+        n_docs = x.shape[0]
+        for i in range(n_docs):
+            lp = self.predict_log_proba(x[i])
+            (r, s) = np.unravel_index(np.argmax(lp), lp.shape)
+            receivers.append(r)
+            senders.append(s)
 
-        return zip(*[np.unravel_index(np.argmax(p), p.shape) for p in lp])
+        return np.array(receivers), np.array(senders)
 
     def predict_proba(self, x):
         """
