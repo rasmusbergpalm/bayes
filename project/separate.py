@@ -18,6 +18,8 @@ nbs = MultinomialBayesianNaiveBayes(0, 0.01)
 nbs.fit(train_X, train_S)
 pred_s = nbs.predict(val_X)
 
+np.savez("separate.npz", pred_r=pred_r, pred_s=pred_s)
+
 print "Receiver:"
 print f1_score(val_r, pred_r, average='micro')
 print f1_score(val_r, pred_r, average='macro')

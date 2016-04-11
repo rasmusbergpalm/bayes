@@ -25,6 +25,8 @@ start = time.time()
 pred_s = nb.predict_sender(val_X, val_r)
 print "Took %f" % (time.time() - start)
 
+np.savez("combined.npz", pred_r=pred_r, pred_s=pred_s)
+
 print "Receiver:"
 print f1_score(val_r, pred_r, average='micro')
 print f1_score(val_r, pred_r, average='macro')
