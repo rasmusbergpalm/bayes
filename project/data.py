@@ -3,16 +3,17 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 
 class Data:
-    def __init__(self, min_df):
+    def __init__(self, min_df, data_path="data/"):
         self.sv = CountVectorizer()
         self.rv = CountVectorizer()
         self.dv = CountVectorizer(max_df=1.0, min_df=min_df)
+        self.data_path = data_path
 
     def load(self, pattern, train=False):
         docs = list()
         receivers = list()
         senders = list()
-        for path in glob.glob("data/" + pattern):
+        for path in glob.glob(self.data_path + pattern):
             with open(path + "/parties.txt") as f:
                 senders.append(f.readline())
                 receivers.append(f.readline())
